@@ -17,6 +17,8 @@ router.post('/signup', validateSignup ,authController.signup);
 
 //로그인
 //POST
-router.post('/:id', authController.loginUser);
+router.post('/login', authController.login);
+
+router.get('/me', authController.verify);
 
 export default router;
