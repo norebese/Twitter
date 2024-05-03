@@ -1,10 +1,11 @@
 import * as authRepository from '../data/auth.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import {config} from '../config.js';
 
-const secretKey = 'abcdefg1234%^&*';
-const jwtExpiresInDays = '2d';
-const bcryptSaltRounds = 10;
+const secretKey = config.jwt.secretKey;
+const jwtExpiresInDays = config.jwt.expiresInSec;
+const bcryptSaltRounds = config.bcrypt.saltRounds;
 
 // async function makeToken(id){ //토큰을 만들어주는 함수 만듬
 //     const token = jsonwebtoken.sign({
