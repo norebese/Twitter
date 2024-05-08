@@ -45,7 +45,7 @@ export async function login(req,res,next){
         return res.status(401).json({message: `비밀번호가 틀렸음`});
     }
     const token = createJwtToken(user.id); //로그인 되면 토큰 발생
-    res.status(200).json({token, user});
+    res.status(200).json({token, username});
 }
 
 // export async function verify(req,res,next){ //로그인한 흔적 있는지 확인용
