@@ -21,13 +21,13 @@ function createJwtToken(id){ //토큰을 만들어주는 함수 만듬
 
 //회원을 생성하는 함수
 export async function signup(req,res,next){
-    const {username, password, name, email, url} = req.body;
+    let {username, password, name, email, url} = req.body;
     const found = await authRepository.findByUsername(username);
     if(found){
         return res.status(409).json({message: `${username}이 이미 있습니다`})
     }
-    const hashed = await bcrypt.hash(password, bcryptSaltRounds); //비밀번호 암호화
-    const userId = await authRepository.createUser({username, hashed, name, email, url});
+    password = await bcrypt.hash(password, bcryptSaltRounds); //비밀번호 암호화
+    const userId = await authRepository.createUser({username, password, name, email, url});
     const token = createJwtToken(userId);
     res.status(201).json({token, username});
 
