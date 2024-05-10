@@ -1,30 +1,79 @@
 // import {db} from '../db/database.js';
 import SQ from 'sequelize';
 // import {sequelize} from '../db/database.js';
-import MongoDbB from 'mongodb';
+// import MongoDbB from 'mongodb';
 import {getUsers} from '../db/database.js';
+import Mongoose from 'mongoose';
+import {useVirtualId} from '../db/database.js';
 
-const ObjectID = MongoDbB.ObjectId;
+const userSchema = new Mongoose.Schema({
+    username: {type: String, require: true},
+    name: {type: String, require: true},
+    email: {type: String, require: true},
+    password: {type: String, require: true},
+    url: String
+});
+
+useVirtualId(userSchema);
+
+const User = Mongoose.model('User', userSchema); //자동으로 'Users'로 바꿔줌
 
 //아이디(username) 중복 검사
 export async function findByUsername(username){
-    return getUsers().find({username}).next().then(mapOptionalUser);
+    return User.findOne({username});
 }
 
 // id 중복검사
 export async function findById(id){
-    return getUsers().find({_id: new ObjectID(id)}).next().then(mapOptionalUser);
+    return User.findById(id);
 }
 
 //회원가입
 export async function createUser(user){
-    return getUsers().insertOne(user).then((result)=> console.log(result.insertId.toString()));
+    return new User(user).save().then((data)=>data.id);
 }
 
 
 function mapOptionalUser(user){
     return user ? {...user, id: user._id.toString()} : user;
 }
+
+
+
+
+
+
+
+
+
+
+
+// const ObjectID = MongoDbB.ObjectId;
+
+// //아이디(username) 중복 검사
+// export async function findByUsername(username){
+//     return getUsers().find({username}).next().then(mapOptionalUser);
+// }
+
+// // id 중복검사
+// export async function findById(id){
+//     return getUsers().find({_id: new ObjectID(id)}).next().then(mapOptionalUser);
+// }
+
+// //회원가입
+// export async function createUser(user){
+//     return getUsers().insertOne(user).then((result)=> console.log(result.insertId.toString()));
+// }
+
+
+// function mapOptionalUser(user){
+//     return user ? {...user, id: user._id.toString()} : user;
+// }
+
+
+
+
+
 
 // const DataTypes = SQ.DataTypes; //sequelize에서 사용하는 데이터 형들을 넣어두고 데이터형 생성하기 위해
 
